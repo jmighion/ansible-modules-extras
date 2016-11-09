@@ -157,10 +157,19 @@ Else {
 SecEdit.exe /export /cfg $sepath /quiet
 
 $updated_ini = Get-IniFile -FilePath $sepath
-$updated_value = $updated_ini.$category.$key
 
-If ($updated_value -ne $value){
-    Fail-Json $result "The value you supplied '$value' was not accepted by SecEdit. Ensure it is a valid value and try again. The original value of '$current_value' has been kept in tact" 
+Try {
+    $updated_value = $updated_ini.$category.$key
+    If ($updated_value -ne $value){
+        Fail-Json $result "The value you supplied '$value' was not accepted by SecEdit. Ensure it is a valid value and try again. The original value of '$current_value' has been kept in tact" 
+    }
+}
+Catch [System.Management.Automation.PropertyNotFoundException] {
+    # Keys are removed if value was empty or whitespace. Expected behavior.
+    # Rethrow exception if value wasn't empty or whitespace.
+    If (![String]::IsNullOrWhiteSpace($value)) {
+        throw
+    }
 }
 
 rm $home\updated_inf 
