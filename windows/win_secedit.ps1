@@ -104,7 +104,7 @@ $result = New-Object psobject @{
 $category = Get-Attr $params "category" -failifempty $true
 $key = Get-Attr $params "key" -failifempty $true
 $value = Get-Attr $params "value" -failifempty $true
-$sepath = "$home\sec_edit_dump.inf"
+$sepath = "$env:temp\sec_edit_dump.inf"
 
 If ((Get-WmiObject Win32_ComputerSystem).PartOfDomain) {
     Fail-Json $result "This host is joined to a Domain Controller, you'll need to modify GPO directly instead of secedit"
@@ -139,8 +139,8 @@ If ($current_value -eq $value) {
 }
 Else {
     $ini.$category.$key = $value
-    $ini | Out-IniFile -FilePath "$home\updated_inf"
-    SecEdit.exe /configure /db "$home\temp_db.sdb" /cfg "$home\updated_inf" /quiet 
+    $ini | Out-IniFile -FilePath "$env:temp\updated_inf"
+    SecEdit.exe /configure /db "$env:temp\temp_db.sdb" /cfg "$env:temp\updated_inf" /quiet 
     $result.changed = $true
     $result.msg = "Key updated"
     $result.category = $category
@@ -172,8 +172,8 @@ Catch [System.Management.Automation.PropertyNotFoundException] {
     }
 }
 
-rm $home\updated_inf 
-rm $home\temp_db.sdb 
-rm $home\sec_edit_dump.inf
+rm $env:temp\updated_inf 
+rm $env:temp\temp_db.sdb 
+rm $env:temp\sec_edit_dump.inf
 
 Exit-Json $result

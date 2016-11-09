@@ -32,7 +32,7 @@ function Get-IniContent
     {
         "^\[(.+)\]" # Section
         {
-            $section = $matches[1].trim()
+            $section = $matches[1].trim().replace(" ", "_")
             $ini[$section] = @{}
             $CommentCount = 0
         }
@@ -46,7 +46,7 @@ function Get-IniContent
         "(.+?)\s*=(.*)" # Key
         {
             $name,$value = $matches[1..2]
-            $ini[$section][$name] = $value.trim()
+            $ini[$section][$name.trim().replace(" ", "_")] = $value.trim()
         }
     }
     return $ini
