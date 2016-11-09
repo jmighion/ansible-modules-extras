@@ -27,7 +27,7 @@ module: win_secedit_facts
 version_added: '2.3'
 short_description: Gets facts about local security policies via secedit
 description:
-    - Gathers key values for local security policies from secedit. Note that all the return examples are not guaranteed to be present. Secedit removes all keys that have blank values, so systems that do not have anything set for a given key will not be returned. 
+    - Gathers key values for local security policies from secedit. Note that all the return examples are not guaranteed to be present. Secedit removes all keys that have blank values, so systems that do not have anything set for a given key will not be returned. Also note that the categories are returned with the spaces replaced with underscores since they are keys in the dictionary.
 options: {}
 author:
     - James Mighion (@jmighion) 
